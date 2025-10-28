@@ -43,15 +43,9 @@ export default function RegisterPage() {
       <div className= "hidden lg:flex flex-col right-box ">
         <div className="flex flex-col gap-3">
         <div className="text-3xl font-black">Welcome to</div>
-
-          <div>
-            <img src="../src/assets/logo.png" alt="" className="w-48"/>
-          </div>  
+       College event management System
         </div>
-
-        <div className="ml-48 w-80 mt-6">
-        <img src="../src/assets/signuppic.svg" alt="" className='w-full'/>
-        </div>   
+  
       
     </div>
       <div className= "bg-white w-full sm:w-full md:w-1/2 lg:w-1/3 px-7 py-7 rounded-xl justify-center align-middle ">
