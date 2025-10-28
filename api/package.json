@@ -1,4 +1,15 @@
 {
+  "name": "eventoems-api",
+  "version": "1.0.0",
+  "description": "Event Management System API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
@@ -12,5 +23,8 @@
     "multer": "^1.4.5-lts.1",
     "qr-image": "^3.2.0",
     "qrcode": "^1.5.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
   }
 }

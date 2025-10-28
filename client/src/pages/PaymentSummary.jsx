@@ -70,11 +70,11 @@ export default function PaymentSummary() {
         userid: user ? user._id : '',
         ticketDetails: {
           ...prevTicketDetails.ticketDetails,
-          name: user ? user.name : '',
-          email: user ? user.email : '',
+          name: user ? user.name : (details.name || ''),
+          email: user ? user.email : (details.email || ''),
         }
       }));
-    }, [user]);
+    }, [user, details.name, details.email]);
     
     
     if (!event) return '';
@@ -99,34 +99,56 @@ export default function PaymentSummary() {
   e.preventDefault();
 //!adding a ticket qr code to booking ----------------------
   try {
-    const qrCode = await generateQRCode(
-      ticketDetails.ticketDetails.eventname,
-      ticketDetails.ticketDetails.name
-    );
+    const userName = ticketDetails.ticketDetails.name || details.name || 'Guest';
+    const eventName = ticketDetails.ticketDetails.eventname || event.title;
+    const userEmail = ticketDetails.ticketDetails.email || details.email || 'no-email@example.com';
+    
+    console.log('Generating QR code for:', { userName, eventName });
+    
+    // Generate QR code with better content
+    const qrCode = await generateQRCode(userName, eventName);
+    
+    if (!qrCode || qrCode === null) {
+      console.error('QR code generation failed or returned null');
+      alert('Failed to generate QR code. Please refresh and try again.');
+      return;
+    }
+    
+    console.log('QR Code generated successfully, length:', qrCode.length);
+    
 //!updating the ticket details qr with prevoius details ------------------
     const updatedTicketDetails = {
       ...ticketDetails,
       ticketDetails: {
         ...ticketDetails.ticketDetails,
+        name: userName,
+        email: userEmail,
         qr: qrCode,
       }
     };
+    
+    console.log('Posting ticket:', updatedTicketDetails);
+    
 //!posting the details to backend ----------------------------
     const response = await axios.post(`/tickets`, updatedTicketDetails);
-    alert("Ticket Created");
+    alert("Ticket Created Successfully!");
     setRedirect(true)
-    console.log('Success creating ticket', updatedTicketDetails)
+    console.log('Success creating ticket', response.data)
   } catch (error) {
     console.error('Error creating ticket:', error);
+    alert('Failed to create ticket. Please try again.');
   }
 
 }
 //! Helper function to generate QR code ------------------------------
 async function generateQRCode(name, eventName) {
   try {
+    console.log('Generating QR with:', { name, eventName });
+    // Generate QR code with both name and eventName
     const qrCodeData = await Qrcode.toDataURL(
-        `Event Name: ${name} \n Name: ${eventName}`
+        `Event: ${eventName} \nName: ${name}`
     );
+    console.log('QR Code generated successfully, data length:', qrCodeData?.substring(0, 50));
     return qrCodeData;
   } catch (error) {
     console.error("Error generating QR code:", error);

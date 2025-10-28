@@ -7,8 +7,7 @@ export default function  Footer() {
       <div className='mt-12 bottom-0 w-full bg-black h-10 flex bg-fixed items-center text-white gap-3'>
 
         <FaCopyright className=" ml-24  h-5 "/>
-          Evento EMS
-      </div>
+College Event Management System      </div>
     </div>
   )
 }

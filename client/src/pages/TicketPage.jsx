@@ -88,7 +88,13 @@ export default function TicketPage() {
               <div className="flex justify-start place-items-center text-sm md:text-base font-normal">
                 
                 <div className=" h-148 w-148">
-                  <img src={ticket.ticketDetails.qr} alt="QRCode" className="aspect-square object-fill "/>
+                  {ticket.ticketDetails.qr ? (
+                    <img src={ticket.ticketDetails.qr} alt="QRCode" className="aspect-square object-fill "/>
+                  ) : (
+                    <div className="w-32 h-32 bg-gray-200 flex items-center justify-center text-xs">
+                      No QR Code
+                    </div>
+                  )}
                 </div>
                 <div className="ml-6 grid grid-cols-2 gap-x-6 gap-y-2">
                   <div className="">
@@ -96,7 +102,7 @@ export default function TicketPage() {
                   </div>
                   
                   <div>
-                    Date & Time:<br /> <span className="font-extrabold text-primarydark">{ticket.ticketDetails.eventdate.toUpperCase().split("T")[0]}, {ticket.ticketDetails.eventtime}</span>
+                    Date & Time:<br /> <span className="font-extrabold text-primarydark">{ticket.ticketDetails.eventdate}, {ticket.ticketDetails.eventtime}</span>
                   </div>
                   <div>
                     Name: <span className="font-extrabold text-primarydark">{ticket.ticketDetails.name.toUpperCase()}</span>
@@ -108,7 +114,7 @@ export default function TicketPage() {
                     Email: <span className="font-extrabold text-primarydark">{ticket.ticketDetails.email}</span>
                   </div>
                   <div>
-                    Ticket ID:<br /><span className="font-extrabold text-primarydark">{ticket.ticketDetails._id}</span>
+                    Ticket ID:<br /><span className="font-extrabold text-primarydark">{ticket._id}</span>
                   </div>
                 </div>
               </div>

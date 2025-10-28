@@ -14,7 +14,7 @@ const Ticket = require("./models/Ticket");
 const app = express();
 
 const bcryptSalt = bcrypt.genSaltSync(10);
-const jwtSecret = "bsbsfbrnsftentwnnwnwn";
+const jwtSecret = process.env.JWT_SECRET || "bsbsfbrnsftentwnnwnwn";
 
 app.use(express.json());
 app.use(cookieParser());
@@ -25,7 +25,45 @@ app.use(
    })
 );
 
-mongoose.connect(process.env.MONGO_URL);
+// MongoDB connection with proper options
+const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/eventoems';
+
+console.log('🔗 Connecting to MongoDB:', mongoUrl.replace(/\/\/.*@/, '//***:***@')); // Hide credentials in logs
+
+const mongooseOptions = {
+   useNewUrlParser: true,
+   useUnifiedTopology: true,
+   serverSelectionTimeoutMS: 10000, // Increased timeout for Atlas
+   socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
+};
+
+// Add SSL options if connecting to MongoDB Atlas
+if (mongoUrl.includes('mongodb+srv://')) {
+   mongooseOptions.tls = true;
+   // Remove conflicting TLS options for Atlas
+}
+
+mongoose.connect(mongoUrl, mongooseOptions);
+
+// Handle MongoDB connection events
+mongoose.connection.on('connected', () => {
+   console.log('✅ MongoDB connected successfully');
+});
+
+mongoose.connection.on('error', (err) => {
+   console.error('❌ MongoDB connection error:', err.message);
+});
+
+mongoose.connection.on('disconnected', () => {
+   console.log('⚠️ MongoDB disconnected');
+});
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+   await mongoose.connection.close();
+   console.log('MongoDB connection closed through app termination');
+   process.exit(0);
+});
 
 const storage = multer.diskStorage({
    destination: (req, file, cb) => {
@@ -209,13 +247,34 @@ app.get("/event/:id/ordersummary/paymentsummary", async (req, res) => {
 
 app.post("/tickets", async (req, res) => {
    try {
-      const ticketDetails = req.body;
-      const newTicket = new Ticket(ticketDetails);
+      const ticketData = req.body;
+      
+      // Validate required fields
+      if (!ticketData.ticketDetails) {
+         return res.status(400).json({ error: "Ticket details are required" });
+      }
+
+      // Create ticket with proper structure
+      const newTicket = new Ticket({
+         userid: ticketData.userid || '',
+         eventid: ticketData.eventid || '',
+         ticketDetails: {
+            name: ticketData.ticketDetails.name || '',
+            email: ticketData.ticketDetails.email || '',
+            eventname: ticketData.ticketDetails.eventname || '',
+            eventdate: ticketData.ticketDetails.eventdate || new Date(),
+            eventtime: ticketData.ticketDetails.eventtime || '',
+            ticketprice: ticketData.ticketDetails.ticketprice || 0,
+            qr: ticketData.ticketDetails.qr || '',
+         },
+         count: ticketData.count || 0,
+      });
+      
       await newTicket.save();
       return res.status(201).json({ ticket: newTicket });
    } catch (error) {
       console.error("Error creating ticket:", error);
-      return res.status(500).json({ error: "Failed to create ticket" });
+      return res.status(500).json({ error: "Failed to create ticket", details: error.message });
    }
 });
 

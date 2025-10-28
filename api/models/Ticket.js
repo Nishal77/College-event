@@ -7,7 +7,7 @@ const ticketSchema = new mongoose.Schema({
       name: { type: String, required: true },
       email: { type: String, require: true },
       eventname: { type: String, require: true },
-      eventdate: { type: Date, require: true },
+      eventdate: { type: String, require: true }, // Changed to String to match frontend
       eventtime: { type: String, require: true },
       ticketprice: { type: Number, require: true },
       qr: { type: String, require: true },
