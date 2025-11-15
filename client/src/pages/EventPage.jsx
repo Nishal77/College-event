@@ -45,14 +45,25 @@ export default function EventPage() {
 if (!event) return '';
   return (
     <div className="flex flex-col mx-5 xl:mx-32 md:mx-10 mt-5 flex-grow">
-     <div >
-        {event.image &&(
-          <img src={`${event.image}`} alt="" height="500px" width="1440px" className='rounded object-fill aspect-16:9'/>
+     <div className="w-full h-96 rounded-lg overflow-hidden bg-gray-100">
+        {event.image ? (
+          <img 
+            src={`http://localhost:4000/uploads/${event.image}`} 
+            alt={event.title}
+            className='w-full h-full object-cover'
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = 'https://via.placeholder.com/1440x500?text=Event+Image';
+            }}
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-primary to-primarydark flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-32 w-32 text-white opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
         )}
       </div>
-
-      <img src="../src/assets/event1.jpeg" alt="" className='rounded object-fill aspect-16:9'/> 
-      {/* FIXME: This is a demo image after completing the create event function delete this */}
 
       <div className="flex justify-between mt-8 mx-2">
           <h1 className="text-3xl md:text-5xl font-extrabold">{event.title.toUpperCase()}</h1>
@@ -61,7 +72,7 @@ if (!event) return '';
           </Link>
       </div>
       <div className="mx-2">
-          <h2 className="text-md md:text-xl font-bold mt-3 text-primarydark">{event.ticketPrice === 0? 'Free' : 'LKR. '+ event.ticketPrice}</h2>
+          <h2 className="text-md md:text-xl font-bold mt-3 text-primarydark">{event.ticketPrice === 0? 'Free' : '₹ '+ event.ticketPrice}</h2>
       </div>
       <div className="mx-2 mt-5 text-md md:text-lg truncate-3-lines">
         {event.description}

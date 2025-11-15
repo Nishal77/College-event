@@ -17,6 +17,9 @@ import OrderSummary from './pages/OrderSummary'
 import PaymentSummary from './pages/PaymentSummary'
 import TicketPage from './pages/TicketPage'
 import CreatEvent from './pages/CreateEvent'
+import AdminLogin from './pages/AdminLogin'
+import AdminDashboard from './pages/AdminDashboard'
+import BookingConfirmation from './pages/BookingConfirmation'
 
 axios.defaults.baseURL = 'http://localhost:4000/';
 axios.defaults.withCredentials=true;
@@ -32,7 +35,7 @@ function App() {
         <Route path='/createEvent' element = {<AddEvent/>} />
         <Route path='/event/:id' element= {<EventPage/>} />
         <Route path='/calendar' element={<CalendarView />} />
-        <Route path='/wallet' element={<TicketPage />}/>
+        <Route path='/wallet' element={<TicketPage />}/> 
         <Route path='/event/:id/ordersummary' element = {<OrderSummary />} />
       </Route>
 
@@ -41,7 +44,11 @@ function App() {
       <Route path='/forgotpassword' element = {<ForgotPassword/>} />
       <Route path='/resetpassword' element = {<ResetPassword/>} />
       <Route path='/event/:id/ordersummary/paymentsummary' element = {<PaymentSummary />} />
+      <Route path='/booking-confirmation/:id' element={<BookingConfirmation />} />
       
+      {/* Admin Routes */}
+      <Route path='/admin' element={<AdminLogin />}/>
+      <Route path='/admin/dashboard' element={<AdminDashboard />}/>
     
     </Routes>
     </UserContextProvider>  

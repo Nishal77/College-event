@@ -87,17 +87,7 @@ export default function Header() {
           </div>
           )}
     
-          
-          <Link to={'/createEvent'}> {/*TODO:Route create event page after creating it */}
-            <div className='hidden md:flex flex-col place-items-center py-1 px-2 rounded text-primary cursor-pointer hover:text-primarydark hover:bg-white hover:shadow-sm shadow-gray-200 hover:transition-shadow duration-1500'>
-              <button>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 stroke-3 py-1">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                </svg>
-              </button>
-              <div className='font-bold color-primary text-sm'>Create Event</div>
-            </div>  
-          </Link>
+          {/* Removed Create Event button - Only admin can create events */}
 
           <div className='hidden lg:flex gap-5 text-sm'>
           <Link to={'/wallet'}> {/*TODO:Route wallet page after creating it */}
@@ -160,29 +150,15 @@ export default function Header() {
         )}
 
         {/* -------------------IF user is not Logged in DO this MAIN AND MOBILE-------------------- */}
-        {!user &&(
-          <div>
-            
-            <Link to={'/login'} className=" ">
-              <button className="primary">
-                <div>Sign in </div>
-              </button>
-            </Link>
-          </div>
-        )}
+        {/* Sign in button removed - users can browse events without login */}
           
           {/* -------------------IF user is Logged DO this Mobile -------------------- */}
           {!!user &&(
-            //w-auto flex flex-col absolute bg-white pl-2 pr-6 py-5 gap-4 rounded-xl
             <div className="absolute z-10 mt-64 flex flex-col w-48 bg-white right-2 md:right-[160px] rounded-lg shadow-lg"> 
-            {/* TODO: */}
               <nav className={`block ${isMenuOpen ? 'block' : 'hidden'} `}>
                 <div className="flex flex-col font-semibold text-[16px]">
-                <Link className="flex hover:bg-background hover:shadow py-2 pt-3 pl-6 pr-8 rounded-lg" to={'/createEvent'} >
-                  Create Event
-                </Link>
                 
-                <Link className="flex hover:bg-background hover:shadow py-2 pl-6 pr-8 rounded-lg" to={'/wallet'}>
+                <Link className="flex hover:bg-background hover:shadow py-2 pt-3 pl-6 pr-8 rounded-lg" to={'/wallet'}>
                   <div>Wallet</div>
                 </Link>
                 
